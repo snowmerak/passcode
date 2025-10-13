@@ -1,6 +1,9 @@
 package passcode
 
-import "fmt"
+import (
+	"encoding/hex"
+	"fmt"
+)
 
 type Algorithm string
 
@@ -41,6 +44,10 @@ func NewPasscode(algorithm Algorithm, key []byte) (*Passcode, error) {
 	}, nil
 }
 
-func (p *Passcode) Compute(data []byte) []byte {
-	return p.hasher(p.key, data)
+func (p *Passcode) Compute(data []byte) string {
+	hashed := p.hasher(p.key, data)
+	if len(hashed) < 4 {
+		hashed = append(hashed, make([]byte, 4-len(hashed))...)
+	}
+	return hex.EncodeToString(hashed[:4])
 }
