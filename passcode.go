@@ -15,10 +15,11 @@ type Hasher func(key []byte, data []byte) []byte
 
 type Passcode struct {
 	algorithm string
+	key       []byte
 	hasher    Hasher
 }
 
-func NewPasscode(algorithm Algorithm) (*Passcode, error) {
+func NewPasscode(algorithm Algorithm, key []byte) (*Passcode, error) {
 	var hasher Hasher
 	switch algorithm {
 	case AlgorithmSHA3KMAC128:
@@ -35,6 +36,11 @@ func NewPasscode(algorithm Algorithm) (*Passcode, error) {
 
 	return &Passcode{
 		algorithm: string(algorithm),
+		key:       key,
 		hasher:    hasher,
 	}, nil
+}
+
+func (p *Passcode) Compute(data []byte) []byte {
+	return p.hasher(p.key, data)
 }
