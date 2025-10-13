@@ -46,8 +46,8 @@ func NewPasscode(algorithm Algorithm, key []byte) (*Passcode, error) {
 
 func (p *Passcode) Compute(data []byte) string {
 	hashed := p.hasher(p.key, data)
-	if len(hashed) < 4 {
-		hashed = append(hashed, make([]byte, 4-len(hashed))...)
+	if len(hashed) < 6 {
+		hashed = append(hashed, make([]byte, 6-len(hashed))...)
 	}
-	return hex.EncodeToString(hashed[:4])
+	return hex.EncodeToString(hashed[:6])
 }
