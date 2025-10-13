@@ -80,8 +80,16 @@ func bytepad(data []byte, w int) []byte {
 	return result
 }
 
+func sha3KMAC128ForPasscode(key, data []byte) []byte {
+	return kmac(key, []byte("authorization"), data, 32, 168, sha3.NewCShake128)
+}
+
 func SHA3KMAC128(key, customization, data []byte, outputLen int) []byte {
 	return kmac(key, customization, data, outputLen, 168, sha3.NewCShake128)
+}
+
+func sha3KMAC256ForPasscode(key, data []byte) []byte {
+	return kmac(key, []byte("authorization"), data, 32, 136, sha3.NewCShake256)
 }
 
 func SHA3KMAC256(key, customization, data []byte, outputLen int) []byte {
