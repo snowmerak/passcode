@@ -691,10 +691,3 @@ func Benchmark_Comparison_BLAKE3_vs_SHA3(b *testing.B) {
 		}
 	})
 }
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
