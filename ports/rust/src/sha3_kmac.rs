@@ -91,15 +91,9 @@ fn kmac128(
     let encoded_key = encode_string(key);
     let padded_key = bytepad(&encoded_key, 168); // rate for SHA3-128
 
-    // NIST SP 800-185: KMAC uses cSHAKE with function name "KMAC"
-    // Rust sha3 crate's CShake takes a function name parameter
-    // We pass "KMAC" concatenated with customization as per KMAC spec
-    let mut function_string = Vec::with_capacity(4 + customization.len());
-    function_string.extend_from_slice(b"KMAC");
-    function_string.extend_from_slice(customization);
-    
+    // NIST SP 800-185: KMAC uses cSHAKE with function name "KMAC" and customization
     let mut hasher = CShake128::from_core(
-        sha3::CShake128Core::new(&function_string),
+        sha3::CShake128Core::new_with_function_name(b"KMAC", customization),
     );
     
     hasher.update(&padded_key);
@@ -121,13 +115,9 @@ fn kmac256(
     let encoded_key = encode_string(key);
     let padded_key = bytepad(&encoded_key, 136); // rate for SHA3-256
 
-    // NIST SP 800-185: KMAC uses cSHAKE with function name "KMAC"
-    let mut function_string = Vec::with_capacity(4 + customization.len());
-    function_string.extend_from_slice(b"KMAC");
-    function_string.extend_from_slice(customization);
-    
+    // NIST SP 800-185: KMAC uses cSHAKE with function name "KMAC" and customization
     let mut hasher = CShake256::from_core(
-        sha3::CShake256Core::new(&function_string),
+        sha3::CShake256Core::new_with_function_name(b"KMAC", customization),
     );
     
     hasher.update(&padded_key);
