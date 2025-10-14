@@ -25,8 +25,7 @@ classifiers = [
 ]
 requires-python = ">=3.8"
 dependencies = [
-    "wasmer>=1.1.0",
-    "wasmer-compiler-cranelift>=1.1.0",
+    "wasmtime>=25.0.0",
 ]
 
 [project.urls]
