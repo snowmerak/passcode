@@ -26,7 +26,7 @@ func NewPasscode(algorithm Algorithm, key []byte) (*Passcode, error) {
 	var hasher Hasher
 	switch algorithm {
 	case AlgorithmSHA3KMAC128:
-		hasher = sha3KMAC256ForPasscode
+		hasher = sha3KMAC128ForPasscode
 	case AlgorithmSHA3KMAC256:
 		hasher = sha3KMAC256ForPasscode
 	case AlgorithmBLAKE3KeyedMode128:
