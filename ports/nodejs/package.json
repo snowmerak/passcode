@@ -1,0 +1,25 @@
+{
+  "name": "@snowmerak/passcode",
+  "version": "1.0.0",
+  "description": "Challenge-response OTP library with SHA3-KMAC and BLAKE3 support",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "keywords": ["otp", "authentication", "kmac", "blake3", "sha3", "challenge-response"],
+  "author": "snowmerak",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/snowmerak/passcode.git",
+    "directory": "ports/nodejs"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "wasm",
+    "README.md"
+  ],
+  "dependencies": {},
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

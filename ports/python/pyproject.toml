@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "passcode-py"
+version = "1.0.0"
+description = "Challenge-response OTP library using SHA3-KMAC and BLAKE3"
+readme = "README.md"
+authors = [
+    {name = "snowmerak"}
+]
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security :: Cryptography",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "wasmer>=1.1.0",
+    "wasmer-compiler-cranelift>=1.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/snowmerak/passcode"
+Repository = "https://github.com/snowmerak/passcode"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["passcode_py*"]
+
+[tool.setuptools.package-data]
+passcode_py = ["*.wasm"]

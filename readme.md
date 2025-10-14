@@ -88,6 +88,32 @@ func main() {
 -   `AlgorithmBLAKE3KeyedMode128`
 -   `AlgorithmBLAKE3KeyedMode256`
 
+## 🌍 Language Ports
+
+This library is available in multiple languages:
+
+### Official Implementations
+- **Go** (Reference Implementation) - This repository
+- **Rust** - Native Rust implementation in `ports/rust/`
+- **WebAssembly** - Universal WASM build in `ports/wasm/`
+
+### Language Bindings (WASM-based)
+- **Node.js** - `ports/nodejs/` - Full TypeScript support
+  ```bash
+  npm install @snowmerak/passcode
+  ```
+- **Python** - `ports/python/` - Python 3.8+ support
+  ```bash
+  pip install passcode-py
+  ```
+- **Dart/Flutter** - `ports/dart/` - Cross-platform Flutter support
+  ```yaml
+  dependencies:
+    passcode: ^1.0.0
+  ```
+
+All implementations produce identical results and are tested against the same test vectors. See `test/` directory for cross-implementation validation.
+
 ## 📄 License
 
 This project is licensed under the MIT License.
