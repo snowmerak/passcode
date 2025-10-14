@@ -14,5 +14,8 @@ sha3 = "0.10"
 blake3 = "1.5"
 hex = "0.4"
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [dev-dependencies]
 rand = "0.8"

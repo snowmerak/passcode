@@ -22,7 +22,7 @@ void main() async {
   for (final (name, algo) in algorithms) {
     try {
       final passcode = Passcode(algo, key);
-      final otp = passcode.compute(challenge);
+      final otp = await passcode.compute(challenge);
       print('${name.padRight(20)}: $otp');
     } catch (e) {
       print('${name.padRight(20)}: Error - $e');

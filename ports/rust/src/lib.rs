@@ -34,7 +34,11 @@
 mod blake3_keyed;
 mod passcode;
 mod sha3_kmac;
+mod ffi;
 
 pub use passcode::{Algorithm, Passcode};
 pub use blake3_keyed::{blake3_keyed_mode256, blake3_keyed_mode512};
 pub use sha3_kmac::{sha3_kmac128, sha3_kmac256};
+
+// Re-export FFI functions
+pub use ffi::*;
