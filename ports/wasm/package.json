@@ -1,0 +1,37 @@
+{
+  "name": "@snowmerak/passcode-wasm",
+  "version": "1.0.0",
+  "description": "WebAssembly bindings for Passcode OTP library",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "passcode_wasm_bg.wasm",
+    "passcode_wasm.js",
+    "passcode_wasm.d.ts"
+  ],
+  "scripts": {
+    "build": "wasm-pack build --target bundler --out-dir pkg",
+    "build:nodejs": "wasm-pack build --target nodejs --out-dir pkg-node",
+    "build:web": "wasm-pack build --target web --out-dir pkg-web",
+    "build:all": "npm run build && npm run build:nodejs && npm run build:web",
+    "test": "wasm-pack test --node"
+  },
+  "keywords": [
+    "otp",
+    "authentication",
+    "2fa",
+    "challenge-response",
+    "wasm",
+    "webassembly",
+    "cryptography"
+  ],
+  "author": "snowmerak",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/snowmerak/passcode.git",
+    "directory": "ports/wasm"
+  }
+}

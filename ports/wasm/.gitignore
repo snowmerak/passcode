@@ -1,0 +1,22 @@
+# Build artifacts
+/target/
+/pkg/
+/pkg-node/
+/pkg-web/
+
+# Node modules
+node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

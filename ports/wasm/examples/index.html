@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passcode WASM Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover { background: #45a049; }
+        .output {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .otp {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2196F3;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Passcode WASM Demo</h1>
+        <p>Challenge-Response OTP Authentication using WebAssembly</p>
+        
+        <button onclick="generateOTP()">Generate OTP</button>
+        <button onclick="testAllAlgorithms()">Test All Algorithms</button>
+        
+        <div id="output" class="output">
+            Click a button to start...
+        </div>
+    </div>
+
+    <script type="module">
+        import init, { Passcode, Algorithm } from '../pkg-web/passcode_wasm.js';
+
+        let wasmInitialized = false;
+        let secretKey;
+
+        async function ensureInit() {
+            if (!wasmInitialized) {
+                await init();
+                wasmInitialized = true;
+                
+                // Generate a secret key
+                secretKey = new Uint8Array(32);
+                crypto.getRandomValues(secretKey);
+                
+                document.getElementById('output').textContent = 
+                    '✅ WASM initialized!\n' +
+                    `Secret Key: ${Array.from(secretKey).map(b => b.toString(16).padStart(2, '0')).join('')}`;
+            }
+        }
+
+        window.generateOTP = async function() {
+            try {
+                await ensureInit();
+                
+                const passcode = new Passcode(Algorithm.Blake3KeyedMode256, secretKey);
+                
+                const challenge = new Uint8Array(16);
+                crypto.getRandomValues(challenge);
+                
+                const otp = passcode.compute(challenge);
+                
+                document.getElementById('output').innerHTML = 
+                    `<strong>Algorithm:</strong> ${passcode.algorithmName}\n` +
+                    `<strong>Challenge:</strong> ${Array.from(challenge).map(b => b.toString(16).padStart(2, '0')).join('')}\n` +
+                    `<strong>Generated OTP:</strong> <span class="otp">${otp}</span>`;
+                    
+            } catch (error) {
+                document.getElementById('output').textContent = 'Error: ' + error.message;
+            }
+        };
+
+        window.testAllAlgorithms = async function() {
+            try {
+                await ensureInit();
+                
+                const challenge = new Uint8Array(16);
+                crypto.getRandomValues(challenge);
+                
+                const algorithms = [
+                    { name: 'SHA3-KMAC-128', algo: Algorithm.Sha3Kmac128 },
+                    { name: 'SHA3-KMAC-256', algo: Algorithm.Sha3Kmac256 },
+                    { name: 'BLAKE3-Keyed-Mode-128', algo: Algorithm.Blake3KeyedMode128 },
+                    { name: 'BLAKE3-Keyed-Mode-256', algo: Algorithm.Blake3KeyedMode256 }
+                ];
+                
+                let output = `<strong>Challenge:</strong> ${Array.from(challenge).map(b => b.toString(16).padStart(2, '0')).join('')}\n\n`;
+                output += '<strong>OTPs by Algorithm:</strong>\n';
+                
+                for (const { name, algo } of algorithms) {
+                    const passcode = new Passcode(algo, secretKey);
+                    const otp = passcode.compute(challenge);
+                    output += `${name}: <span class="otp">${otp}</span>\n`;
+                }
+                
+                document.getElementById('output').innerHTML = output;
+                
+            } catch (error) {
+                document.getElementById('output').textContent = 'Error: ' + error.message;
+            }
+        };
+    </script>
+</body>
+</html>
