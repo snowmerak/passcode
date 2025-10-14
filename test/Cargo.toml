@@ -1,0 +1,17 @@
+[package]
+name = "rust_test"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "rust_test"
+path = "rust_test.rs"
+
+[dependencies]
+passcode = { path = "../ports/rust" }
+hex = "0.4"
+sha3 = "0.10"
+
+[[bin]]
+name = "debug_cshake_rust"
+path = "debug_cshake_rust.rs"
