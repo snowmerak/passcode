@@ -4,7 +4,7 @@ Python wrapper for Passcode WASM library using wasmtime
 
 from enum import IntEnum
 from pathlib import Path
-from wasmtime import Store, Module, Instance
+from wasmtime import Store, Module, Instance, Linker, WasiConfig
 
 
 class Algorithm(IntEnum):
@@ -21,20 +21,41 @@ class WasmRuntime:
     def __init__(self):
         wasm_path = Path(__file__).parent / "passcode_wasm_bg.wasm"
         self.store = Store()
+        
+        # Configure WASI (needed by wasm-bindgen)
+        wasi = WasiConfig()
+        self.store.set_wasi(wasi)
+        
+        # Create linker and define WASI
+        linker = Linker(self.store.engine)
+        linker.define_wasi()
+        
+        # Add wasm-bindgen required imports
+        def wbindgen_throw(caller, ptr, len):
+            raise Exception("wasm-bindgen throw")
+        
+        linker.func_wrap("__wbindgen_placeholder__", "__wbindgen_throw", wbindgen_throw)
+        
+        # Load and instantiate module
         module = Module.from_file(self.store.engine, str(wasm_path))
-        self.instance = Instance(self.store, module, [])
+        self.instance = linker.instantiate(self.store, module)
         
         # Cache exports
         exports = self.instance.exports(self.store)
         self.memory = exports["memory"]
         self._alloc = exports["__wbindgen_malloc"]
         self._dealloc = exports["__wbindgen_free"]
-        self._passcode_new = exports["passcode_new"]
-        self._passcode_compute = exports["passcode_compute"]
-        self._blake3_128 = exports["blake3KeyedMode128"]
-        self._blake3_256 = exports["blake3KeyedMode256"]
-        self._sha3_128 = exports["sha3Kmac128"]
-        self._sha3_256 = exports["sha3Kmac256"]
+        
+        # Get function exports
+        try:
+            self._passcode_new = exports["passcode_new"]
+            self._passcode_compute = exports["passcode_compute"]
+            self._blake3_128 = exports["blake3KeyedMode128"]
+            self._blake3_256 = exports["blake3KeyedMode256"]
+            self._sha3_128 = exports["sha3Kmac128"]
+            self._sha3_256 = exports["sha3Kmac256"]
+        except KeyError as e:
+            raise RuntimeError(f"Missing WASM export: {e}")
     
     def write_bytes(self, data: bytes) -> tuple[int, int]:
         """Write bytes to WASM memory, return (ptr, len)"""
