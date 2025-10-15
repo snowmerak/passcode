@@ -78,21 +78,7 @@ else
 fi
 echo ""
 
-# 6. Dart test
-echo "6. Running Dart implementation..."
-if command -v dart &> /dev/null; then
-    if (cd ../ports/dart && dart run test/dart_test.dart) > dart_output.txt 2>&1; then
-        cat dart_output.txt
-        results["Dart"]="✅"
-    else
-        echo -e "${YELLOW}⚠️  Dart test failed (WASM bindings not fully implemented)${NC}"
-        cat dart_output.txt
-        results["Dart"]="⚠️"
-    fi
-else
-    echo -e "${YELLOW}⚠️  Dart not installed, skipping...${NC}"
-    results["Dart"]="⏭️"
-fi
+# Dart removed - implementation incomplete
 echo ""
 
 # Compare outputs from working implementations
@@ -138,14 +124,14 @@ else
 fi
 
 # Cleanup
-rm -f go_output.txt rust_output.txt node_output.txt nodejs_lib_output.txt python_output.txt dart_output.txt
+rm -f go_output.txt rust_output.txt node_output.txt nodejs_lib_output.txt python_output.txt
 rm -f go_otps.txt rust_otps.txt node_otps.txt nodejs_lib_otps.txt python_otps.txt
 
 echo ""
 echo "========================================"
 echo "Summary"
 echo "========================================"
-for impl in "Go" "Rust" "Node.js-WASM" "Node.js-Lib" "Python" "Dart"; do
+for impl in "Go" "Rust" "Node.js-WASM" "Node.js-Lib" "Python"; do
     echo -e "$impl: ${results[$impl]}"
 done
 echo "========================================"
